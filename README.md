@@ -9,7 +9,6 @@
 - [LLM Experimentation](#-llm-experimentation)
 - [SHAP/LIME Analysis](#-shaplime-analysis)
 - [Installation & Dependencies](#-installation--dependencies)
-- [References](#-references)
   
 ---
 
