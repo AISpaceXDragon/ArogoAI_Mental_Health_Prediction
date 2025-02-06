@@ -37,7 +37,7 @@ if 'loaded' not in st.session_state:
 st.title("Mental Health Prediction & Explainability")
 
 # Create two columns for input (left) and output (right)
-col1, col2 = st.columns([2, 5])
+col1, col2 = st.columns([1, 5])
 
 # Left Column: User Inputs
 with col1:
