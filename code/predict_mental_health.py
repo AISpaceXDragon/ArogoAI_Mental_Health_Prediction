@@ -16,10 +16,10 @@ if gemini_api_key:
 
 # Initialize session state to store model and encoders
 if 'loaded' not in st.session_state:
-    st.session_state.xgb_model = joblib.load("/path/to/xgboost_model.pkl")
-    st.session_state.label_encoders = joblib.load("/path/to/label_encoders.pkl")
-    st.session_state.target_encoder = joblib.load("/path/to/target_encoder.pkl")
-    st.session_state.X_train = joblib.load("/path/to/X_train.pkl")
+    st.session_state.xgb_model = joblib.load("models/depression_anxiety_data.csv_models/xgboost_model.pkl")  # Update if using another model
+    st.session_state.label_encoders = joblib.load("encoders/depression_anxiety_data.csv_encoders/label_encoders.pkl")
+    st.session_state.target_encoder = joblib.load("encoders/depression_anxiety_data.csv_encoders/target_encoder.pkl")
+    st.session_state.X_train = joblib.load("datasets/datasets_pickle/depression_anxiety_data.csv_pickle/X_train.pkl")  # Load training data for LIME
 
     # Initialize LIME explainer
     st.session_state.explainer = lime.lime_tabular.LimeTabularExplainer(
