@@ -34,50 +34,52 @@ if 'loaded' not in st.session_state:
 # Streamlit UI
 st.title("Mental Health Prediction & Explainability")
 
-# User input fields (Same as before)
+# Create two columns for input (left) and output (right)
+col1, col2 = st.columns([1, 1])
 
-# Convert user input to DataFrame (Same as before)
-age = st.number_input("Age", min_value=10, max_value=100, value=25)
-gender = st.selectbox("Gender", ["male", "female",])
-bmi = st.number_input("BMI", min_value=10.0, max_value=50.0, value=24.5)
-who_bmi = st.selectbox("WHO BMI Category", ["Underweight", "Normal", "Overweight",])
-phq_score = st.number_input("PHQ Score", min_value=0, max_value=27, value=12)
-depressiveness = st.checkbox("Depressiveness", value=True)
-suicidal = st.checkbox("Suicidal", value=False)
-depression_diagnosis = st.checkbox("Depression Diagnosis", value=False)
-depression_treatment = st.checkbox("Depression Treatment", value=False)
-gad_score = st.number_input("GAD Score", min_value=0, max_value=21, value=10)
-anxiousness = st.checkbox("Anxiousness", value=True)
-anxiety_diagnosis = st.checkbox("Anxiety Diagnosis", value=False)
-anxiety_treatment = st.checkbox("Anxiety Treatment", value=False)
-epworth_score = st.number_input("Epworth Score", min_value=0, max_value=24, value=6)
-sleepiness = st.checkbox("Sleepiness", value=False)
+# Left Column: User Inputs
+with col1:
+    st.subheader("User Inputs")
 
-# Convert user input to DataFrame
-user_input = pd.DataFrame([{
-    "age": age,
-    "gender": gender,
-    "bmi": bmi,
-    "who_bmi": who_bmi,
-    "phq_score": phq_score,
-    "depressiveness": depressiveness,
-    "suicidal": suicidal,
-    "depression_diagnosis": depression_diagnosis,
-    "depression_treatment": depression_treatment,
-    "gad_score": gad_score,
-    "anxiousness": anxiousness,
-    "anxiety_diagnosis": anxiety_diagnosis,
-    "anxiety_treatment": anxiety_treatment,
-    "epworth_score": epworth_score,
-    "sleepiness": sleepiness
-}])
+    # User input fields
+    age = st.number_input("Age", min_value=10, max_value=100, value=25)
+    gender = st.selectbox("Gender", ["male", "female"])
+    bmi = st.number_input("BMI", min_value=10.0, max_value=50.0, value=24.5)
+    who_bmi = st.selectbox("WHO BMI Category", ["Underweight", "Normal", "Overweight"])
+    phq_score = st.number_input("PHQ Score", min_value=0, max_value=27, value=12)
+    depressiveness = st.checkbox("Depressiveness", value=True)
+    suicidal = st.checkbox("Suicidal", value=False)
+    depression_diagnosis = st.checkbox("Depression Diagnosis", value=False)
+    depression_treatment = st.checkbox("Depression Treatment", value=False)
+    gad_score = st.number_input("GAD Score", min_value=0, max_value=21, value=10)
+    anxiousness = st.checkbox("Anxiousness", value=True)
+    anxiety_diagnosis = st.checkbox("Anxiety Diagnosis", value=False)
+    anxiety_treatment = st.checkbox("Anxiety Treatment", value=False)
+    epworth_score = st.number_input("Epworth Score", min_value=0, max_value=24, value=6)
+    sleepiness = st.checkbox("Sleepiness", value=False)
 
-# Encode categorical features
-for col in st.session_state.label_encoders:
-    user_input[col] = st.session_state.label_encoders[col].transform(user_input[col])
+    # Convert user input to DataFrame
+    user_input = pd.DataFrame([{
+        "age": age,
+        "gender": gender,
+        "bmi": bmi,
+        "who_bmi": who_bmi,
+        "phq_score": phq_score,
+        "depressiveness": depressiveness,
+        "suicidal": suicidal,
+        "depression_diagnosis": depression_diagnosis,
+        "depression_treatment": depression_treatment,
+        "gad_score": gad_score,
+        "anxiousness": anxiousness,
+        "anxiety_diagnosis": anxiety_diagnosis,
+        "anxiety_treatment": anxiety_treatment,
+        "epworth_score": epworth_score,
+        "sleepiness": sleepiness
+    }])
 
-
-# Encode categorical features (Same as before)
+    # Encode categorical features
+    for col in st.session_state.label_encoders:
+        user_input[col] = st.session_state.label_encoders[col].transform(user_input[col])
 
 # Function to generate explanation using Google Gemini
 def generate_gemini_explanation(predicted_label, user_input_data):
@@ -124,44 +126,46 @@ if st.button("Predict & Explain"):
     prediction = st.session_state.xgb_model.predict(instance)
     predicted_label = st.session_state.target_encoder.inverse_transform(prediction)[0]
 
-    # Display prediction result
-    st.success(f"**Predicted Mental Health Condition:** {predicted_label}")
+    # Right Column: Display Model Outputs
+    with col2:
+        st.subheader("Model Output")
 
-    # Generate LIME explanation
-    st.write("### LIME Explanation:")
-    exp = st.session_state.explainer.explain_instance(instance[0], st.session_state.xgb_model.predict_proba)
+        # Display prediction result
+        st.success(f"**Predicted Mental Health Condition:** {predicted_label}")
 
-    # Save LIME output to an HTML file
-    lime_html_path = "lime_explanation.html"
-    exp.save_to_file(lime_html_path)
+        # Generate LIME explanation
+        st.write("### LIME Explanation:")
+        exp = st.session_state.explainer.explain_instance(instance[0], st.session_state.xgb_model.predict_proba)
 
-    # Download LIME explanation
-    with open(lime_html_path, "r") as f:
-        lime_html = f.read()
-        st.download_button("Download LIME Explanation", lime_html, "lime_explanation.html", "text/html")
+        # Save LIME output to an HTML file
+        lime_html_path = "lime_explanation.html"
+        exp.save_to_file(lime_html_path)
 
-    os.remove(lime_html_path)  # Cleanup
+        # Display LIME explanation as an iframe
+        with open(lime_html_path, "r") as f:
+            lime_html = f.read()
+            st.components.v1.html(lime_html, height=400)
 
-    # Generate LLM Explanation using Google Gemini
-    user_input_str = ", ".join([f"{col}: {val}" for col, val in user_input.iloc[0].items()])
-    explanation = generate_gemini_explanation(predicted_label, user_input_str)
+        # Generate LLM Explanation using Google Gemini
+        user_input_str = ", ".join([f"{col}: {val}" for col, val in user_input.iloc[0].items()])
+        explanation = generate_gemini_explanation(predicted_label, user_input_str)
 
-    # Display LLM Explanation
-    st.write("### Natural Language Explanation:")
-    st.write(explanation)
+        # Display LLM Explanation
+        st.write("### Natural Language Explanation:")
+        st.write(explanation)
 
-    # Generate Coping Mechanisms using Google Gemini
-    coping_mechanisms = generate_gemini_explanation(predicted_label, "Suggest coping mechanisms and next steps.")
+        # Generate Coping Mechanisms using Google Gemini
+        coping_mechanisms = generate_gemini_explanation(predicted_label, "Suggest coping mechanisms and next steps.")
 
-    # Display Coping Mechanisms
-    st.write("### Suggested Coping Mechanisms:")
-    st.write(coping_mechanisms)
+        # Display Coping Mechanisms
+        st.write("### Suggested Coping Mechanisms:")
+        st.write(coping_mechanisms)
 
-    # Generate PDF report
-    report_path = generate_pdf_report(predicted_label, explanation, coping_mechanisms)
+        # Generate PDF report
+        report_path = generate_pdf_report(predicted_label, explanation, coping_mechanisms)
 
-    # Download PDF Report
-    with open(report_path, "rb") as f:
-        st.download_button("Download PDF Report", f, "mental_health_report.pdf", "application/pdf")
+        # Download PDF Report
+        with open(report_path, "rb") as f:
+            st.download_button("Download PDF Report", f, "mental_health_report.pdf", "application/pdf")
 
-    st.write("Open the downloaded file to view the report.")
+        st.write("Open the downloaded file to view the report.")
