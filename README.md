@@ -1,5 +1,18 @@
 # 🧠 Self-Analysis Mental Health Prediction Model
 
+## **📌 Table of Contents**
+- [Objective](#-Objective)
+- [Project Structure](#-project-structure)
+- [Dataset & Preprocessing](#-dataset--preprocessing)
+- [Model Development](#-model-development)
+- [Model Inference](#-model-inference)
+- [LLM Experimentation](#-llm-experimentation)
+- [SHAP/LIME Analysis](#-shaplime-analysis)
+- [Installation & Dependencies](#-installation--dependencies)
+- [References](#-references)
+  
+---
+
 ## **Objective**
 This project develops a **Self-Analysis Mental Health Model** that predicts possible mental health conditions based on user-provided symptoms. The model is designed for **seamless integration** into a chatbot or application, focusing on:
 - **Accuracy**
