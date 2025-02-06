@@ -7,6 +7,8 @@ import os
 import google.generativeai as genai  # Google Gemini API
 from fpdf import FPDF  # PDF report generation
 
+st.set_page_config(layout="wide")
+
 # Sidebar: API Key Input
 st.sidebar.header("API Key Settings")
 gemini_api_key = st.sidebar.text_input("Enter your Google Gemini API Key:", type="password")
