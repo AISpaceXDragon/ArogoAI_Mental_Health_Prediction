@@ -7,7 +7,7 @@ import os
 import google.generativeai as genai  # Google Gemini API
 from fpdf import FPDF  # PDF report generation
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Health Care Bot",layout="wide")
 
 # Sidebar: API Key Input
 st.sidebar.header("API Key Settings")
@@ -37,7 +37,7 @@ if 'loaded' not in st.session_state:
 st.title("Mental Health Prediction & Explainability")
 
 # Create two columns for input (left) and output (right)
-col1, col2 = st.columns([3, 5])
+col1, col2 = st.columns([2, 5])
 
 # Left Column: User Inputs
 with col1:
