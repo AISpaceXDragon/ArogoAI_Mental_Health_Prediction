@@ -20,6 +20,8 @@ This project develops a **Self-Analysis Mental Health Model** that predicts poss
 
 Additionally, a **basic UI or CLI script** is provided for testing and interaction.
 
+Tutorial video link - https://youtu.be/ZUgLrDS2OW8
+
 ---
 
 ## **📂 Project Structure**
