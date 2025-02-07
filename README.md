@@ -144,7 +144,7 @@ LIME (Local Interpretable Model-Agnostic Explanations)
 
 1. Clone the Repository
 ```
-git clone https://github.com/your_username/ArogoAI_Mental_Health_Prediction.git
+git clone https://github.com/AISpaceXDragon/ArogoAI_Mental_Health_Prediction.git
 cd ArogoAI_Mental_Health_Prediction
 ```
 2. Install Dependencies
