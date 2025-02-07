@@ -160,5 +160,5 @@ pip install -r requirements.txt
 3. Run the Model
 
 ```
-python code/predict_mental_health.py
+streamlit run code/predict_mental_health.py
 ```
